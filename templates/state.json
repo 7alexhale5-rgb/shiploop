@@ -1,0 +1,15 @@
+{
+  "version": 1,
+  "phase": "idle",
+  "iteration": 0,
+  "spec_ref": null,
+  "plan_ref": null,
+  "gates": {
+    "pre_merge": null,
+    "issue_detected": null,
+    "re_entry": null
+  },
+  "last_transition": null,
+  "started_at": null,
+  "updated_at": null
+}

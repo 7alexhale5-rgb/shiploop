@@ -1,0 +1,41 @@
+# ShipLoop — Project Configuration
+# Copy to .shiploop/config.yaml and customize
+
+# Model routing — override defaults per task type
+# Agents already specify their model tier in frontmatter;
+# these overrides let you tune per-project if needed.
+routing:
+  default: sonnet
+  overrides:
+    security_audit: opus
+    lint_check: haiku
+    boilerplate_gen: haiku
+    gate_format: haiku
+    ship_commands: haiku
+
+# Gate policies — what must pass before gate approval is offered
+gates:
+  pre_merge:
+    require_tests: true
+    require_audit: true
+    auto_approve: false
+  issue_detected:
+    auto_approve: false
+  re_entry:
+    auto_approve: false
+
+# MCP integration — ShipLoop adapts based on what's available
+# No configuration needed; MCPs are auto-detected at runtime.
+# Set explicit overrides here only if you want to force-disable an MCP.
+mcp:
+  # github: true
+  # playwright: true
+  # sentry: false
+  # linear: false
+
+# Handoff settings
+handoffs:
+  auto_generate: true
+  on_gate: true
+  on_phase_change: true
+  on_session_end: true

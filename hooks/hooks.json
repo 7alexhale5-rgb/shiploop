@@ -1,0 +1,27 @@
+{
+  "description": "ShipLoop lifecycle hooks — auto-detect project state on session start",
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -d .shiploop ]; then echo 'ShipLoop detected. Run /sl-status to see current state.'; elif [ -f .claude-plugin/plugin.json ] && grep -q shiploop .claude-plugin/plugin.json 2>/dev/null; then echo 'ShipLoop plugin repo detected.'; fi",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+    "PreCompact": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if [ -f .shiploop/state.json ]; then PHASE=$(python3 -c \"import json; print(json.load(open('.shiploop/state.json'))['phase'])\" 2>/dev/null || echo 'unknown'); if [ \"$PHASE\" != 'idle' ] && [ \"$PHASE\" != 'unknown' ]; then echo \"WARNING: ShipLoop is mid-loop (phase: $PHASE). Consider running /sl-handoff before compacting.\"; fi; fi",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}

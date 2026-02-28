@@ -24,6 +24,26 @@ gates:
   re_entry:
     auto_approve: false
 
+# Test settings
+test:
+  # Auto-detect runner from project config (jest, vitest, pytest, go test)
+  # Override here if auto-detect fails
+  # runner: vitest
+  keep_artifacts: false
+  timeout: 120
+
+# Audit settings
+audit:
+  security_model: opus
+  quality_model: sonnet
+  skip_security: false
+  skip_quality: false
+
+# Gate settings
+gate:
+  create_pr_draft: true
+  require_clean_audit: false
+
 # MCP integration — ShipLoop adapts based on what's available
 # No configuration needed; MCPs are auto-detected at runtime.
 # Set explicit overrides here only if you want to force-disable an MCP.

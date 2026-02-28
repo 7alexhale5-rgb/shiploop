@@ -1,8 +1,94 @@
 {
   "name": "shiploop",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Complete dev lifecycle orchestration — SPEC → PLAN → BUILD → TEST → AUDIT → SHIP → OBSERVE → TRIAGE with human gates",
   "author": {
     "name": "Alex Hale"
-  }
+  },
+  "commands": [
+    {
+      "name": "sl-status",
+      "description": "Show current ShipLoop state, phase, and available transitions",
+      "file": "commands/sl-status.md"
+    },
+    {
+      "name": "sl-spec",
+      "description": "Capture or refine a feature spec from text, file, or observation",
+      "file": "commands/sl-spec.md"
+    },
+    {
+      "name": "sl-plan",
+      "description": "Generate an implementation plan from the current spec",
+      "file": "commands/sl-plan.md"
+    },
+    {
+      "name": "sl-build",
+      "description": "Execute the implementation plan using builder and boilerplate-gen agents",
+      "file": "commands/sl-build.md"
+    },
+    {
+      "name": "sl-test",
+      "description": "Generate and run targeted unit tests for changed code (JiTTest)",
+      "file": "commands/sl-test.md"
+    },
+    {
+      "name": "sl-audit",
+      "description": "Run security scan and code quality review on changed files",
+      "file": "commands/sl-audit.md"
+    },
+    {
+      "name": "sl-gate",
+      "description": "Pre-merge gate — present test/audit summary, await human approval",
+      "file": "commands/sl-gate.md"
+    }
+  ],
+  "agents": [
+    {
+      "name": "spec-writer",
+      "description": "Captures and structures feature specs from loose input",
+      "file": "agents/spec-writer.md"
+    },
+    {
+      "name": "planner",
+      "description": "Generates step-by-step implementation plans from specs",
+      "file": "agents/planner.md"
+    },
+    {
+      "name": "builder",
+      "description": "Executes implementation plan steps precisely",
+      "file": "agents/builder.md"
+    },
+    {
+      "name": "boilerplate-gen",
+      "description": "Fast scaffolding for config files, types, and directory structures",
+      "file": "agents/boilerplate-gen.md"
+    },
+    {
+      "name": "test-generator",
+      "description": "Analyzes git diff and spec to generate targeted unit tests",
+      "file": "agents/test-generator.md"
+    },
+    {
+      "name": "security-auditor",
+      "description": "Scans changed files for OWASP Top 10, injection, secrets, and unsafe dependencies",
+      "file": "agents/security-auditor.md"
+    },
+    {
+      "name": "quality-reviewer",
+      "description": "Reviews code for pattern consistency, naming, complexity, and conventions",
+      "file": "agents/quality-reviewer.md"
+    },
+    {
+      "name": "gate-presenter",
+      "description": "Formats test and audit results into a human-readable gate summary",
+      "file": "agents/gate-presenter.md"
+    }
+  ],
+  "skills": [
+    {
+      "name": "state-management",
+      "description": "State machine operations for ShipLoop phase transitions",
+      "file": "skills/state-management/SKILL.md"
+    }
+  ]
 }

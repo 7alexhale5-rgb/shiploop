@@ -2,7 +2,7 @@
 name: planner
 description: Analyzes the codebase and breaks a spec into a numbered implementation plan with specific file paths, change descriptions, and step tags for build routing
 tools: Read, Grep, Glob, TodoWrite
-model: sonnet
+model: opus
 color: green
 ---
 

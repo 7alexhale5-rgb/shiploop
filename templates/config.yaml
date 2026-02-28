@@ -7,6 +7,7 @@
 routing:
   default: sonnet
   overrides:
+    planner: opus
     security_audit: opus
     lint_check: haiku
     boilerplate_gen: haiku

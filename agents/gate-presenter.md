@@ -1,7 +1,7 @@
 ---
 name: gate-presenter
 description: Reads test and audit artifacts, formats a human-readable gate summary for pre-merge decisions. Presents facts, never decides.
-tools: Read, Glob, TodoWrite
+tools: Read, Glob
 model: haiku
 color: white
 ---

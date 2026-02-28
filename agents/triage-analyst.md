@@ -14,6 +14,7 @@ You receive:
 - The issue data from `.shiploop/observations/latest-issue.json`
 - The original spec from `.shiploop/specs/current.md`
 - The deploy reference (tag, commit SHA)
+- The spec template format from `templates/spec-template.md` (for structural reference — adapt for fix context)
 
 ## Process
 

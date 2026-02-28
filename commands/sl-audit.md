@@ -85,9 +85,11 @@ Read the reports that were generated:
 - `.shiploop/audits/latest-quality.json` (if quality was run)
 
 Compute:
-- **Blocking findings**: high-severity security issues
+- **Blocking findings**: high-severity security issues (per `gates.pre_merge.require_audit`), or test failures (per `gates.pre_merge.require_tests`)
 - **Advisory findings**: medium/low security + quality warnings
 - **Informational**: info-level from both
+
+Note: The gate command (`/sl-gate`) makes the final blocking determination based on the full gate policy. This classification is a preview.
 
 ## Step 7: Report
 

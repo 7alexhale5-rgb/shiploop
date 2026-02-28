@@ -43,6 +43,17 @@ Read .shiploop/state.json
 
 If the file doesn't exist, the project hasn't been initialized. Run initialization first.
 
+### Null-Safe Field Access
+
+When reading `state.json`, treat these fields as potentially null or missing:
+- `gates.pre_merge` — null until first gate decision
+- `gates.issue_detected` — null until an issue is confirmed/dismissed
+- `gates.re_entry` — null until re-entry is approved/cancelled
+- `spec_ref` — null when in `idle` phase
+- `plan_ref` — null when no plan has been generated
+
+Always check for null/missing before using these values. If a field is null and the current operation requires it, report what's missing and suggest the corrective command.
+
 ### Writing State (Atomic Writes)
 
 NEVER write directly to `state.json`. Always use atomic writes to prevent corruption:

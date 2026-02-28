@@ -68,8 +68,9 @@ Follow the state-management skill's **Transition Protocol**:
 4. Update `last_transition` with `from` (previous phase) and `to` (`spec`)
 5. Update `updated_at` to current ISO-8601 timestamp
 6. If this is the first transition from `idle`, set `started_at`
-7. If transitioning from `gate_re_entry`, increment `iteration`
-8. Write state atomically (temp file + rename)
+7. Write state atomically (temp file + rename)
+
+**Note:** Do NOT increment `iteration` here — `/sl-triage` Gate B handles iteration incrementing when approving re-entry.
 
 ## Step 6: Log Decision
 

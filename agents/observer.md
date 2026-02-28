@@ -1,7 +1,7 @@
 ---
 name: observer
 description: Monitors post-deploy health by querying Sentry for errors and analyzing deployment logs. Determines if issues exist or the deploy is clean.
-tools: Read, Grep, Glob, Bash, TodoWrite
+tools: Read, Grep, Glob, Bash
 model: sonnet
 color: orange
 ---

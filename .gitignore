@@ -14,3 +14,4 @@ node_modules/
 
 # ShipLoop runtime state (generated per-project, not committed)
 # Note: .shiploop/ lives in TARGET projects, not in this plugin repo
+.shiploop/

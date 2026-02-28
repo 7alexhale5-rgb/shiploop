@@ -1,7 +1,7 @@
 ---
 name: quality-reviewer
 description: Reviews changed code for pattern consistency, naming conventions, complexity, and duplication. Flags actionable deviations from established project conventions.
-tools: Read, Grep, Glob, TodoWrite
+tools: Read, Grep, Glob
 model: sonnet
 color: purple
 ---

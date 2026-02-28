@@ -8,11 +8,9 @@ routing:
   default: sonnet
   overrides:
     planner: opus
-    security_audit: opus
-    lint_check: haiku
+    security_auditor: opus
     boilerplate_gen: haiku
-    gate_format: haiku
-    ship_commands: haiku
+    gate_presenter: haiku
 
 # Gate policies — what must pass before gate approval is offered
 gates:
@@ -68,6 +66,13 @@ triage:
   max_iterations: 5
   # Archive specs before triage overwrites them
   archive_specs: true
+
+# Loop settings
+loop:
+  # Max iterations before forcing manual intervention
+  max_iterations: 5
+  # Auto-advance between phases (if false, stops at each gate)
+  auto_advance: false
 
 # MCP integration — ShipLoop adapts based on what's available
 # No configuration needed; MCPs are auto-detected at runtime.

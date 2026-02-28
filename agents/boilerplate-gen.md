@@ -29,7 +29,7 @@ You receive one or more `scaffold`-tagged steps from the implementation plan. Ea
 - Write complex algorithms or data transformations
 - Modify existing business logic code
 
-If a step requires judgment about HOW to implement something, stop and report: "This step requires implementation decisions — route to builder agent."
+If a step requires judgment about HOW to implement something, stop and report: "This step requires implementation decisions — needs builder agent."
 
 ## Rules
 

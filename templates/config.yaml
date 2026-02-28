@@ -62,6 +62,13 @@ observe:
   # Sentry project slug (auto-detected from git remote if not set)
   # sentry_project: my-project
 
+# Triage settings
+triage:
+  # Max iterations before forcing manual intervention (prevents infinite loops)
+  max_iterations: 5
+  # Archive specs before triage overwrites them
+  archive_specs: true
+
 # MCP integration — ShipLoop adapts based on what's available
 # No configuration needed; MCPs are auto-detected at runtime.
 # Set explicit overrides here only if you want to force-disable an MCP.

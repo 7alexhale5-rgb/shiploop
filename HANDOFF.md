@@ -1,129 +1,86 @@
-# ShipLoop — Self-Assessment Handoff
+# ShipLoop — Post-Assessment Handoff
 
-**Date**: 2026-02-27 ~9:00 PM
-**Status**: Phase 5 complete — plugin is feature-complete (v0.4.0)
-**Repo**: `~/Projects/shiploop/` (5 commits + Phase 5 uncommitted, 33 files, ~2,570 LOC)
-
----
-
-## Mission: Dogfood ShipLoop Against Itself
-
-Use ShipLoop's own commands to assess and evaluate ShipLoop. The plugin is a collection of markdown files (commands, agents, skills, templates) — treat it as a codebase and run the lifecycle against it.
-
-### What to do
-
-1. **`/sl-loop`** — Initialize `.shiploop/` in the shiploop repo and start the lifecycle
-2. **`/sl-spec`** — Write a spec for "ShipLoop v0.4.0 self-assessment": evaluate command quality, agent design, state machine correctness, config completeness, and documentation coverage
-3. **`/sl-plan`** — Generate an assessment plan from the spec
-4. **`/sl-build`** — Execute the plan (in this case: produce an assessment report as a markdown artifact)
-5. **`/sl-test`** — Validate the assessment by cross-checking claims against actual files
-6. **`/sl-audit`** — Security + quality review of all ShipLoop files
-7. **`/sl-gate`** — Present findings at the gate for human review
-
-The goal is NOT to ship a release — it's to stress-test the plugin's own workflow on a real (meta) task and identify gaps, friction, or broken flows.
-
-### What to evaluate
-
-| Area | Questions |
-|------|-----------|
-| **Commands** | Do all 11 commands follow the 7-step pattern consistently? Are prerequisites, state validation, and transitions correct? |
-| **Agents** | Are tool permissions appropriate? Are model tiers justified? Do agent outputs match what commands expect? |
-| **State machine** | Are all transitions in SKILL.md reachable? Are there dead states or impossible transitions? |
-| **Config** | Does config.yaml cover all configurable behaviors mentioned in commands? Any missing knobs? |
-| **Graceful degradation** | Do commands handle missing MCPs, missing artifacts, wrong-state errors helpfully? |
-| **Documentation** | Is README.md accurate? Do commands have clear argument-hints? Is the handoff template complete? |
-| **Edge cases** | What happens at iteration cap? What if specs/current.md is missing? What if state.json is corrupted? |
-
-### Expected output
-
-A structured assessment report with:
-- Per-area findings (what works, what's broken, what's missing)
-- Severity ratings (P0 = broken flow, P1 = poor UX, P2 = improvement, P3 = nice-to-have)
-- Specific file:line references for each finding
-- Recommended fixes (as potential specs for future iterations)
+**Date**: 2026-02-28
+**Status**: v0.4.1 — all P0s and P1s resolved, P2s remain
+**Repo**: `~/Projects/shiploop/` (8 commits, 33 files, ~2,650 LOC)
 
 ---
 
-## Current File Map (33 files)
+## What Was Done This Session
 
-```
-shiploop/
-├── .claude-plugin/
-│   └── plugin.json                    # v0.4.0 — 11 commands, 11 agents, 1 skill
-├── agents/
-│   ├── spec-writer.md                 # sonnet — structures feature specs
-│   ├── planner.md                     # opus — generates implementation plans
-│   ├── builder.md                     # sonnet — executes plan steps
-│   ├── boilerplate-gen.md             # haiku — config scaffolding
-│   ├── test-generator.md              # sonnet — JiTTest generation
-│   ├── security-auditor.md            # opus — OWASP/SAST (read-only)
-│   ├── quality-reviewer.md            # sonnet — code quality (read-only)
-│   ├── gate-presenter.md              # haiku — formats gate summary
-│   ├── ship-ops.md                    # haiku — git tag/push/merge (no Write/Edit)
-│   ├── observer.md                    # sonnet — Sentry queries + deploy health
-│   └── triage-analyst.md              # sonnet — root cause analysis (read-only + .shiploop/ writes)
-├── commands/
-│   ├── sl-status.md                   # Show state, phase, transitions
-│   ├── sl-spec.md                     # Capture/refine feature spec
-│   ├── sl-plan.md                     # Generate plan from spec
-│   ├── sl-build.md                    # Execute plan (builder + boilerplate-gen)
-│   ├── sl-test.md                     # JiTTest — generate + run tests
-│   ├── sl-audit.md                    # Security + quality review
-│   ├── sl-gate.md                     # Pre-merge gate (human approve/reject)
-│   ├── sl-ship.md                     # Tag, merge PR, push (deployment-agnostic)
-│   ├── sl-observe.md                  # Post-deploy monitoring (Sentry/manual)
-│   ├── sl-triage.md                   # Multi-gate: confirm issue + approve re-entry
-│   └── sl-loop.md                     # Master orchestrator — state→command routing
-├── skills/
-│   └── state-management/
-│       └── SKILL.md                   # State machine, transitions, decision log
-├── templates/
-│   ├── config.yaml                    # Default project config (all sections)
-│   ├── state.json                     # Initial state template
-│   └── spec-template.md              # Spec structure template
-├── README.md                          # Plugin overview + installation
-└── HANDOFF.md                         # This file
-```
+### Self-Assessment Dogfood
+Ran 3 parallel review agents (commands, agents, config/templates) to produce a structured assessment of the entire plugin. Found **6 P0s, 13 P1s, 10 P2s, and 5 P3s**.
 
-## State Machine (Complete)
+### P0 Fixes (commit `27db1ce`)
+| # | Issue | Fix |
+|---|-------|-----|
+| 1 | Gate decision never persisted to `state.json` — `sl-ship` always blocked | Added `gates.pre_merge.decision/actor/decided_at` write to `sl-gate.md` Step 7 |
+| 2 | `git diff HEAD` missed uncommitted changes — tests/audits ran on empty | Removed `HEAD` suffix in `sl-test.md` and `sl-audit.md` |
+| 3 | Build advanced to `test` even with 100% failures | Added 3-tier check: all-fail→stop, partial→confirm, all-pass→advance |
+| 4 | `--from-observation` read wrong file (`latest.json` vs `latest-issue.json`) | Fixed path in `sl-spec.md` |
+| 5 | `/sl-handoff` in README but no command file exists | Removed from README |
+| 6 | Builder + boilerplate-gen had no write-scope guardrail | Added write-scope rules to both agents |
 
-```
-idle → spec → plan → implement → test → audit → gate_pre_merge
-  → ship → observe → idle (clean)
-  → observe → gate_issue_detected → triage → gate_re_entry → spec (loop back)
-  → gate_issue_detected → observe (dismiss)
-  → gate_re_entry → idle (cancel)
-  → gate_pre_merge → spec (reject)
-```
-
-## Agent Model Tiers
-
-| Tier | Agents | Rationale |
-|------|--------|-----------|
-| **opus** | planner, security-auditor | High-stakes decisions — precision prevents cascading errors |
-| **sonnet** | spec-writer, builder, test-generator, quality-reviewer, observer, triage-analyst | Standard implementation + analysis work |
-| **haiku** | boilerplate-gen, ship-ops, gate-presenter | Mechanical/formatting tasks — no judgment needed |
-
-## Config Sections (templates/config.yaml)
-
-`routing` · `gates` · `test` · `audit` · `gate` · `ship` · `observe` · `triage` · `mcp` · `handoffs`
-
-## Known Gaps (Pre-assessment)
-
-These are suspected but unverified — the self-assessment should confirm or deny:
-1. README.md may be out of date (written during Phase 2, now at Phase 5)
-2. No explicit error messages for corrupted state.json
-3. `/sl-loop` doesn't handle `--force` to bypass iteration cap
-4. No `CHANGELOG.md` or version history
-5. Config doesn't have a `loop:` section (orchestrator settings live in `triage:`)
+### P1 Fixes (commit `ed8a5b6`)
+| # | Issue | Fix |
+|---|-------|-----|
+| 1 | Inconsistent init messaging (only `/sl-status --init`) | All 9 commands now mention both `--init` and `/sl-loop` |
+| 2 | `spec-writer` had unjustified `WebSearch` tool | Removed from tools line |
+| 3 | `--force-reentry` didn't verify fix spec exists | Added artifact existence check |
+| 4 | Iteration cap: soft prompt in `sl-triage` vs hard stop in `sl-loop` | Changed to hard stop (consistent) |
+| 5 | `gate.` vs `gates.` config namespace | Standardized to `gates.` |
+| 6 | `--dry-run` report referenced nonexistent artifacts | Added "no artifacts written" note |
+| 7 | `sl-observe` transition was informal one-liner | Replaced with formal 5-step transition block |
+| 8 | Phase visualization showed `BUILD` instead of `IMPLEMENT` | Fixed in `sl-status.md` |
+| 9 | Ship-ops hardcoded `--squash` merge strategy | Made configurable via `ship.merge_strategy` |
+| 10 | Agents redundantly re-ran `git diff` | Changed to "use provided file list" |
+| 11 | `fix-draft.md` copy with no existence guard | Added guard in `sl-triage.md` Step 5 |
+| 12 | Sentry MCP Path A was a dead branch | Added MCP detection note to observer agent |
 
 ---
 
-## How to Start
+## What's Next — Remaining P2s
+
+| # | Issue | File(s) |
+|---|-------|---------|
+| 1 | Config routing key names don't match agent names | `templates/config.yaml` |
+| 2 | Double-increment risk: both `sl-triage` and `sl-spec` increment iteration | `commands/sl-triage.md`, `commands/sl-spec.md` |
+| 3 | `state.json` null refs not guarded in downstream commands | Multiple commands |
+| 4 | No `loop:` section in config | `templates/config.yaml` |
+| 5 | `TodoWrite` granted to agents that never use it | `agents/gate-presenter.md`, `agents/quality-reviewer.md`, `agents/observer.md` |
+| 6 | `spec-template.md` not referenced by spec-producing agents | `agents/spec-writer.md`, `agents/triage-analyst.md` |
+| 7 | Triage fix spec uses different schema than spec-writer | `agents/triage-analyst.md` |
+| 8 | `.gitignore` missing `.shiploop/` for self-dogfooding | `.gitignore` |
+| 9 | Audit "blocking" definition diverges from gate policy | `commands/sl-audit.md` |
+| 10 | `boilerplate-gen` "route to builder" instruction is dead text | `agents/boilerplate-gen.md` |
+
+### P3s (nice-to-have)
+- No `CHANGELOG.md`
+- No corrupted/unknown state handling
+- No `--force` flag for `sl-loop` iteration cap
+- Build parallelization exception underspecified
+- Gate presenter is haiku for high-stakes summary
+
+---
+
+## Beyond Bug Fixes
+
+Once P2s are resolved, the plugin is ready for:
+1. **Marketplace publish** — needs `CHANGELOG.md`, final README review
+2. **Real-world dogfood** — use ShipLoop on an actual project (consult-ops, contract-extract, etc.)
+3. **GitHub integration** — push to a public/private repo for distribution
+
+---
+
+## Git Log
 
 ```
-cd ~/Projects/shiploop
-# Run /sl-loop to initialize and begin the self-assessment lifecycle
+ed8a5b6 fix: resolve 13 P1 issues from self-assessment dogfood
+27db1ce fix: resolve 6 P0 issues from self-assessment dogfood
+e6c72e0 feat: add Phase 5 triage + loop — 2 commands + 1 agent, self-assessment handoff
+91a2bb0 feat: add Phase 4 ship + observe — 2 commands + 2 agents
+7fb43f4 chore: upgrade planner agent to opus for precision
+96e8524 feat: add Phase 3 test/audit/gate pipeline — 3 commands + 4 agents
+4f175db feat: add Phase 2 inner loop — /sl-spec, /sl-plan, /sl-build + 4 agents
+2d251ff feat: scaffold Phase 1 foundation — plugin manifest, state management, /sl-status
 ```
-
-The spec should describe what "assessing ShipLoop" means — the plan will break it into reviewable chunks — and the build will produce the actual assessment report. Let the plugin drive.

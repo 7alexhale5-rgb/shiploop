@@ -61,23 +61,47 @@ If `--skip-run` was passed, skip this step. Report "Tests generated but not exec
 Otherwise:
 
 1. **Detect test runner:**
+   - Read `.shiploop/config.yaml` `test.runner` for explicit override — if set, use it
    - Look for `jest.config.*` or `"jest"` in `package.json` → run `npx jest .shiploop/tests/`
    - Look for `vitest.config.*` or `"vitest"` in `package.json` → run `npx vitest run .shiploop/tests/`
    - Look for `pytest.ini`, `pyproject.toml`, or `conftest.py` → run `python -m pytest .shiploop/tests/`
    - Look for `*_test.go` → run `go test ./.shiploop/tests/...`
-   - If none found: try `npx vitest run .shiploop/tests/` as default for JS/TS projects
-   - Read `.shiploop/config.yaml` `test.runner` for explicit override
 
-2. **Execute with timeout** — Use the timeout from config (default 120s). Capture stdout/stderr.
+2. **If no test runner found — graceful degradation:**
 
-3. **Parse results** — Extract pass/fail counts and any coverage output.
+   Do NOT attempt to install a test framework or fall back to `npx vitest`. Instead:
+
+   a. Report: "No test framework detected — switching to manual verification."
+
+   b. Generate a **verification checklist** from the spec's acceptance criteria:
+      - Read `.shiploop/specs/current.md`
+      - Extract each requirement and acceptance criterion
+      - Format as a numbered checklist
+
+   c. Run **basic smoke checks** (non-framework):
+      - **Syntax validation**: For JS/TS files, run `node --check {file}` on each changed source file. For Python, run `python -m py_compile {file}`.
+      - **Import resolution**: For JS/TS, run `node -e "require('{file}')"` or `node -e "import('{file}')"` on entry points to verify imports resolve.
+      - Report pass/fail for each check.
+
+   d. Present the checklist to the user and let them confirm each item as passed or failed.
+
+   e. Write results with `"runner": "manual"` (see Step 6).
+
+   f. Skip to Step 6 — do not attempt framework-based test execution.
+
+3. **Execute with timeout** (framework path only) — Use the timeout from config (default 120s). Capture stdout/stderr.
+
+4. **Parse results** — Extract pass/fail counts and any coverage output.
 
 ## Step 6: Write Results
 
 Write `.shiploop/audits/latest-tests.json`:
+
+**Framework runner results:**
 ```json
 {
   "generated_at": "ISO-8601 timestamp",
+  "runner": "vitest|jest|pytest|go",
   "test_files": ["list of generated test files"],
   "total": 12,
   "passed": 11,
@@ -86,6 +110,25 @@ Write `.shiploop/audits/latest-tests.json`:
   "coverage": {"lines": 0.82, "branches": 0.71},
   "spec_ref": "specs/current.md",
   "diff_summary": "3 files changed, 45 insertions, 12 deletions"
+}
+```
+
+**Manual verification results (no framework):**
+```json
+{
+  "generated_at": "ISO-8601 timestamp",
+  "runner": "manual",
+  "smoke_checks": {"syntax": "pass", "imports": "pass"},
+  "checklist": [
+    {"criterion": "GET /api/health returns 200", "result": "pass"},
+    {"criterion": "Response includes status field", "result": "pass"}
+  ],
+  "total": 4,
+  "passed": 4,
+  "failed": 0,
+  "failures": [],
+  "spec_ref": "specs/current.md",
+  "diff_summary": "1 file changed, 12 insertions"
 }
 ```
 
@@ -99,6 +142,7 @@ If `--skip-run`, write results with `"total": 0, "passed": 0, "failed": 0` and n
 2. Log to `decisions.jsonl`: phase transition, test counts, pass/fail
 3. Report to user:
 
+**Framework runner output:**
 ```
 JiTTest complete → {passed}/{total} tests passed
 
@@ -110,6 +154,21 @@ Coverage: {lines}% lines, {branches}% branches
 {If failures exist:}
 Failures:
   ✗ {test name} — {error summary}
+
+Next: Run /sl-audit to scan for security and quality issues.
+```
+
+**Manual verification output (no framework):**
+```
+JiTTest complete → manual verification ({passed}/{total} checks passed)
+
+No test framework detected — ran manual verification.
+Smoke checks: syntax {pass|fail}, imports {pass|fail}
+
+Checklist:
+  ✓ {criterion 1}
+  ✓ {criterion 2}
+  ✗ {criterion 3} — {reason}
 
 Next: Run /sl-audit to scan for security and quality issues.
 ```

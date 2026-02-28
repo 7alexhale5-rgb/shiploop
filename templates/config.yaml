@@ -73,6 +73,9 @@ loop:
   max_iterations: 5
   # Auto-advance between phases (if false, stops at each gate)
   auto_advance: false
+  # Fast lane: collapse spec+plan+build for trivial changes
+  # Triggered by --fast flag on /sl-loop
+  fast_lane: true
 
 # MCP integration — ShipLoop adapts based on what's available
 # No configuration needed; MCPs are auto-detected at runtime.

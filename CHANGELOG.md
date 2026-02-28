@@ -2,6 +2,27 @@
 
 All notable changes to ShipLoop are documented here.
 
+## [0.6.0] — 2026-02-28
+
+### Fixed
+- `/sl-test` gracefully degrades without a test framework (#3):
+  - Detects missing runner, switches to manual verification mode
+  - Generates checklist from spec acceptance criteria
+  - Runs syntax + import smoke checks
+  - Writes results with `runner: "manual"` for downstream audit/gate
+
+### Added
+- Fast lane for trivial changes (#2):
+  - `/sl-loop --fast "description"` collapses spec + plan + build into a single inline step
+  - Skips agent delegation for spec-writer, planner, and builder
+  - Audit + gate still run in full (governance never skipped)
+  - Config: `loop.fast_lane: true` (default) to enable
+- `marketplace.json` for self-hosted marketplace install
+- Install instructions for GitHub marketplace and official directory
+
+### Changed
+- Config `test.runner` override now checked before auto-detection (was after)
+
 ## [0.5.0] — 2026-02-28
 
 ### Fixed

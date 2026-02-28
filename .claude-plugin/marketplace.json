@@ -1,0 +1,15 @@
+{
+  "name": "shiploop-marketplace",
+  "description": "ShipLoop — complete dev lifecycle orchestration for Claude Code",
+  "plugins": [
+    {
+      "name": "shiploop",
+      "version": "0.6.0",
+      "description": "Complete dev lifecycle orchestration — SPEC → PLAN → BUILD → TEST → AUDIT → SHIP → OBSERVE → TRIAGE with human gates",
+      "source": {
+        "type": "local",
+        "path": ".."
+      }
+    }
+  ]
+}

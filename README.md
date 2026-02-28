@@ -15,8 +15,12 @@ Between gates, ShipLoop handles spec writing, planning, implementation, testing,
 ## Install
 
 ```bash
-# From Claude Code marketplace (when published)
-/plugin marketplace add shiploop
+# From a marketplace (GitHub-hosted)
+/plugin marketplace add 7alexhale5-rgb/shiploop
+/plugin install shiploop@7alexhale5-rgb-shiploop
+
+# From the official directory (when approved)
+/plugin install shiploop@claude-plugin-directory
 
 # Local development
 /plugin add ~/Projects/shiploop

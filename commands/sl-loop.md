@@ -1,6 +1,6 @@
 ---
 description: Master orchestrator — read state and chain to the next lifecycle command
-argument-hint: Optional feature description to pass to /sl-spec when starting from idle. --force to bypass iteration cap.
+argument-hint: Optional feature description to pass to /sl-spec when starting from idle. --fast for trivial changes. --force to bypass iteration cap.
 ---
 
 # /sl-loop
@@ -28,7 +28,50 @@ Read `.shiploop/config.yaml` for:
 - `triage.max_iterations` (default: 5)
 - `gates.*.auto_approve` settings
 
-## Step 3: Check Iteration Cap
+## Step 3: Fast Lane Detection
+
+The fast lane collapses spec + plan + build into a single inline step for trivial changes. Audit and gate still run — governance is never skipped.
+
+**Trigger conditions (ALL must be true):**
+- `--fast` flag is passed in `$ARGUMENTS`, OR auto-detected (see below)
+- Current phase is `idle` (starting fresh)
+- A feature description is provided in `$ARGUMENTS`
+
+**Auto-detection (when `--fast` is NOT explicit):**
+Skip auto-detection. The fast lane only activates with `--fast`. This prevents surprising behavior on changes that look small but have hidden complexity.
+
+**When fast lane activates:**
+
+1. Report: "Fast lane: trivial change detected — collapsing spec + plan + build."
+2. **Inline spec**: Write a minimal spec to `.shiploop/specs/current.md` directly (no spec-writer agent):
+   ```markdown
+   # Quick Spec
+   **Description:** {user's feature description}
+   **Requirements:**
+   - [ ] {single requirement derived from description}
+   **Scope:** Quick fix — single file, <10 LOC
+   ```
+3. Transition state: `idle → spec`
+4. **Inline plan**: Analyze the codebase yourself to identify the target file and change. Write a 1-step plan to `.shiploop/plans/current.md`:
+   ```markdown
+   # Implementation Plan
+   **Spec:** {description}
+   **Estimated steps:** 1
+   ## Steps
+   ### 1. {action}
+   - **Tag:** `implement`
+   - **Files:** `{file}` (modify)
+   - **Description:** {what to change}
+   ```
+5. Transition state: `spec → plan`
+6. **Inline build**: Make the code change directly — no builder agent. Read the file, make the edit, verify syntax.
+7. Transition state: `plan → implement`
+8. Log all transitions to `decisions.jsonl` with `"mode": "fast_lane"`
+9. Report what was done, then continue to `/sl-test` as normal (the audit + gate phases still run in full)
+
+**Fast lane does NOT skip:** test, audit, gate, ship, observe. Only spec/plan/build are collapsed.
+
+## Step 4: Check Iteration Cap
 
 If `iteration >= triage.max_iterations` AND `--force` was NOT passed:
 ```
@@ -44,7 +87,7 @@ Stop — do not auto-advance past the iteration cap.
 
 If `--force` was passed: log `{event: "iteration_cap_override", iteration: N, actor: "human"}` to `decisions.jsonl` and continue past the cap for this invocation only.
 
-## Step 4: Route to Next Command
+## Step 5: Route to Next Command
 
 Based on the current phase, determine and invoke the next command:
 
@@ -118,7 +161,7 @@ Description: {arguments}
 Running /sl-spec...
 ```
 
-## Step 5: Report
+## Step 6: Report
 
 After the chained command completes, report the new state:
 ```

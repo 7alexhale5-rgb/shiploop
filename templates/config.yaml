@@ -45,6 +45,23 @@ gate:
   create_pr_draft: true
   require_clean_audit: false
 
+# Ship settings
+ship:
+  # Tag format: v{iteration}.{YYYY-MM-DD} (e.g., v1.2026-02-28)
+  tag_format: "v{iteration}.{date}"
+  merge_pr: true
+  push_remote: origin
+  push_branch: main
+
+# Observe settings
+observe:
+  # Observation window before declaring clean (minutes)
+  window: 30
+  # Enable Sentry MCP integration (auto-detected if not set)
+  # sentry: true
+  # Sentry project slug (auto-detected from git remote if not set)
+  # sentry_project: my-project
+
 # MCP integration — ShipLoop adapts based on what's available
 # No configuration needed; MCPs are auto-detected at runtime.
 # Set explicit overrides here only if you want to force-disable an MCP.

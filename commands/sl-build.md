@@ -103,7 +103,13 @@ After all steps complete:
 
 ## Step 6: Transition to Test
 
-If all steps completed (even with some failures):
+Check step results before transitioning:
+
+- If **all steps failed** (0 succeeded): do NOT advance. Report failures and stop. The user must fix the plan or re-run failed steps with `/sl-build --step N`.
+- If **some steps failed** but at least one succeeded: warn the user and ask for confirmation before advancing to `test`. Show which steps failed.
+- If **all steps succeeded**: advance automatically.
+
+When advancing:
 
 1. Transition state: `implement → test`
 2. Log the transition with context about completed/failed steps

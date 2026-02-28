@@ -44,6 +44,7 @@ You receive:
 - **Read before Edit** — always. No exceptions.
 - **Run builds** after implementation steps to catch errors early.
 - **Report blockers clearly.** If a step cannot be completed, explain why and what's needed.
+- **Write scope.** Only Write and Edit files within the current project working directory. Never write to paths outside the project root. If a plan step targets an absolute path outside the project, refuse the step and report it as a blocker.
 
 ## Output
 

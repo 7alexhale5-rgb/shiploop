@@ -28,7 +28,7 @@ Check `$ARGUMENTS` for flags:
 
 ## Step 3: Detect Changes
 
-1. Run `git diff --name-only HEAD` to identify changed files
+1. Run `git diff --name-only` to identify changed files (no `HEAD` — detects uncommitted working-tree changes from the build step)
 2. Filter to source files only — exclude:
    - Config files (`.json`, `.yaml`, `.toml`, `.env`)
    - Documentation (`.md`, `.txt`)

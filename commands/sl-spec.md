@@ -32,7 +32,7 @@ If `$ARGUMENTS` starts with `/` or contains a file extension (`.md`, `.txt`, etc
 
 ### From observation
 If `$ARGUMENTS` contains `--from-observation`:
-- Read `.shiploop/observations/latest.json`
+- Read `.shiploop/observations/latest-issue.json`
 - If it doesn't exist, tell the user: "No observations found. Run `/sl-observe` first, or provide requirements directly."
 - Extract the error context, affected files, and severity to use as requirements input
 

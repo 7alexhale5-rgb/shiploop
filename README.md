@@ -37,7 +37,6 @@ Between gates, ShipLoop handles spec writing, planning, implementation, testing,
 | `/sl-observe` | Surface production issues |
 | `/sl-triage` | Auto-generate fix spec from observation |
 | `/sl-loop` | Run the full loop automatically |
-| `/sl-handoff` | Force a session handoff document |
 
 ## How It Works
 

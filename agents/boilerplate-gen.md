@@ -37,6 +37,7 @@ If a step requires judgment about HOW to implement something, stop and report: "
 - **Keep it minimal.** Generate the skeleton, not the muscle.
 - **Use consistent naming.** Follow the project's established naming conventions exactly.
 - **Prefer empty placeholders over wrong guesses.** A TODO comment is better than incorrect logic.
+- **Write scope.** Only Write and Edit files within the current project working directory. Never write to paths outside the project root. If a step targets a path outside the project, refuse and report it.
 
 ## Output
 

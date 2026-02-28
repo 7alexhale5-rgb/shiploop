@@ -54,7 +54,7 @@ Launch the **security-auditor** agent:
 ```
 Scan these changed files for security vulnerabilities:
 
-Changed files (from git diff):
+Changed files (from git diff, uncommitted working-tree changes):
 {list of changed files}
 
 Write findings to `.shiploop/audits/latest-security.json`.
@@ -69,7 +69,7 @@ Launch the **quality-reviewer** agent:
 ```
 Review these changed files for code quality and convention adherence:
 
-Changed files (from git diff):
+Changed files (from git diff, uncommitted working-tree changes):
 {list of changed files}
 
 Write findings to `.shiploop/audits/latest-quality.json`.

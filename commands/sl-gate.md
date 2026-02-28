@@ -65,6 +65,8 @@ Transition to `gate_pre_merge`:
 
 Log the transition to `decisions.jsonl`.
 
+**Note:** The gate decision is written to `state.json` in Step 7 after the human decides — not here.
+
 ## Step 6: Present Gate + Detect GitHub
 
 Display the formatted gate summary from the gate-presenter agent.
@@ -89,6 +91,13 @@ If no blockers, recommend approval:
 Ask the user to choose:
 - **Approve** → transition to `ship` phase. Log: `{decision: "approve", actor: "human", blockers: N, advisory: M}`
 - **Reject** → transition to `spec` phase (loop back). Log: `{decision: "reject", actor: "human", reason: "{user's reason}"}`. Increment iteration counter in state.
+
+**Write gate decision to state.json:**
+After the human decides, update `state.json`:
+- Set `gates.pre_merge.decision` to `"approved"` or `"rejected"`
+- Set `gates.pre_merge.actor` to `"human"`
+- Set `gates.pre_merge.decided_at` to current ISO-8601 timestamp
+- Write state atomically (this is what `/sl-ship` reads to confirm approval)
 
 After decision:
 ```

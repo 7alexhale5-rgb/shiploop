@@ -91,7 +91,12 @@ Read the existing code first. Follow existing patterns. Do not add features beyo
 
 Steps MUST execute sequentially — later steps may depend on earlier ones. Do NOT run steps in parallel.
 
-Exception: multiple consecutive `scaffold` steps with no shared file paths CAN run in parallel.
+Exception: multiple consecutive `scaffold` steps CAN run in parallel if they meet ALL of these criteria:
+1. They are adjacent in the step list (no `implement` step between them)
+2. Their file path lists have zero overlap (no file appears in more than one step)
+3. They don't create directories that another parallel step writes into
+
+When parallelizing, launch all qualifying scaffold agents simultaneously and wait for all to complete before moving to the next non-scaffold step.
 
 ## Step 5: Verify Build
 

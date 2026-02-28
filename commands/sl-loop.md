@@ -1,6 +1,6 @@
 ---
 description: Master orchestrator — read state and chain to the next lifecycle command
-argument-hint: Optional feature description to pass to /sl-spec when starting from idle
+argument-hint: Optional feature description to pass to /sl-spec when starting from idle. --force to bypass iteration cap.
 ---
 
 # /sl-loop
@@ -30,17 +30,19 @@ Read `.shiploop/config.yaml` for:
 
 ## Step 3: Check Iteration Cap
 
-If `iteration >= triage.max_iterations`:
+If `iteration >= triage.max_iterations` AND `--force` was NOT passed:
 ```
 ⚠ Iteration cap reached ({iteration}/{max_iterations})
 
 {iteration} fix iterations have run without resolving the issue.
 Recommend: manual investigation or increase triage.max_iterations in config.
 
-Override: /sl-loop will not auto-advance past this cap.
-Run /sl-triage manually to continue, or /sl-status to review history.
+Override: Run /sl-loop --force to bypass the cap for one cycle.
+Or run /sl-triage manually to continue, or /sl-status to review history.
 ```
 Stop — do not auto-advance past the iteration cap.
+
+If `--force` was passed: log `{event: "iteration_cap_override", iteration: N, actor: "human"}` to `decisions.jsonl` and continue past the cap for this invocation only.
 
 ## Step 4: Route to Next Command
 

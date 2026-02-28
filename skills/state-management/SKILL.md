@@ -33,6 +33,15 @@ idle → spec → plan → implement → test → audit → gate_pre_merge
      → triage → gate_re_entry → spec → ...
 ```
 
+### Unknown Phase Recovery
+
+If `state.json` contains a `phase` value not in the valid list above, treat it as corrupted state:
+
+1. Log to `decisions.jsonl`: `{event: "error", type: "unknown_phase", phase: "{value}", action: "reset_to_idle"}`
+2. Report: "Unknown phase '{value}' in state.json — resetting to idle. Previous state preserved in decisions log."
+3. Set `phase` to `idle`, write state atomically
+4. Continue as if in `idle`
+
 ### Reading State
 
 Always read `.shiploop/state.json` before any phase operation:

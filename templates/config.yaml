@@ -10,7 +10,7 @@ routing:
     planner: opus
     security_auditor: opus
     boilerplate_gen: haiku
-    gate_presenter: haiku
+    gate_presenter: sonnet
 
 # Gate policies — what must pass before gate approval is offered
 gates:

@@ -19,6 +19,8 @@ You receive:
 
 ### Path A: Sentry Available
 
+**MCP detection:** Attempt to call a Sentry MCP tool. If the call fails (tool not found), fall through to Path B (manual). Do not assume Sentry is available.
+
 1. **Query Sentry** — Use the Sentry MCP tools to check for new errors since the deploy:
    - Search for issues with `firstSeen` after the deploy timestamp
    - Filter to the project associated with this repo

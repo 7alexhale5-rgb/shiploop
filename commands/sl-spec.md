@@ -15,7 +15,7 @@ Follow the **state-management** skill for all state operations in this command.
 
 Read `.shiploop/state.json`.
 
-- If `.shiploop/` doesn't exist: tell the user to run `/sl-status --init` first. Stop.
+- If `.shiploop/` doesn't exist: tell the user to run `/sl-status --init` or `/sl-loop` to initialize first. Stop.
 - Valid transitions into `spec`: from `idle`, from `gate_re_entry` (loop restart)
 - If current phase is already `spec`: warn "Overwriting existing spec" and continue
 - If current phase is any other active phase (plan, implement, test, audit, etc.): warn that this will restart the loop and ask for confirmation before proceeding

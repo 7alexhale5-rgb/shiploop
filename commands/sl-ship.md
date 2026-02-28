@@ -15,7 +15,7 @@ Follow the **state-management** skill for all state operations in this command.
 
 Read `.shiploop/state.json`.
 
-- If `.shiploop/` doesn't exist: tell the user to run `/sl-status --init` first. Stop.
+- If `.shiploop/` doesn't exist: tell the user to run `/sl-status --init` or `/sl-loop` to initialize first. Stop.
 - Valid transition: `gate_pre_merge → ship`
 - The gate must show `decision: "approved"` — if gate was rejected, the state should be `spec`, not here.
 - If current phase is not `gate_pre_merge`: tell the user the current phase and suggest the appropriate next command.
@@ -36,6 +36,7 @@ If gate is not approved, stop: "Gate was not approved — cannot ship."
 Read config from `.shiploop/config.yaml`:
 - `ship.tag_format` (default: `v{iteration}.{date}`)
 - `ship.merge_pr` (default: `true`)
+- `ship.merge_strategy` (default: `squash`)
 - `ship.push_remote` (default: `origin`)
 - `ship.push_branch` (default: `main`)
 
@@ -47,10 +48,10 @@ If `--dry-run`:
 ```
 Dry run — would execute:
   1. git tag -a "{tag}" -m "ShipLoop release {tag}"
-  2. gh pr merge --squash (if PR exists and merge_pr: true)
+  2. gh pr merge --{merge_strategy} (if PR exists and merge_pr: true)
   3. git push {remote} {branch} --tags
 ```
-Skip to Step 7.
+Skip to Step 7. In the dry-run report, note: "Dry run — no artifacts written, no state changes made."
 
 Otherwise, launch the **ship-ops** agent:
 ```
@@ -60,6 +61,7 @@ Tag: {computed tag name}
 Remote: {push_remote}
 Branch: {push_branch}
 Merge PR: {merge_pr}
+Merge Strategy: {merge_strategy}
 Iteration: {iteration}
 Date: {date}
 ```

@@ -15,7 +15,7 @@ Follow the **state-management** skill for all state operations in this command.
 
 Read `.shiploop/state.json`.
 
-- If `.shiploop/` doesn't exist: tell the user to run `/sl-status --init` first. Stop.
+- If `.shiploop/` doesn't exist: tell the user to run `/sl-status --init` or `/sl-loop` to initialize first. Stop.
 - Valid transition: `audit → gate_pre_merge`
 - If current phase is not `audit`: tell the user the current phase and suggest the appropriate next command
 - If current phase is already `gate_pre_merge`: this is a re-review — proceed
@@ -34,7 +34,7 @@ Missing files are noted as "not available" — not failures.
 Read `.shiploop/config.yaml` `gates.pre_merge` section:
 - If `require_tests: true` AND tests failed → mark as **BLOCKER**
 - If `require_audit: true` AND high-severity security findings exist → mark as **BLOCKER**
-- If `require_clean_audit: true` (from `gate` section) AND any medium+ findings exist → mark as **BLOCKER**
+- If `require_clean_audit: true` (from `gates` section) AND any medium+ findings exist → mark as **BLOCKER**
 
 ## Step 4: Launch Gate Presenter
 
@@ -74,7 +74,7 @@ Display the formatted gate summary from the gate-presenter agent.
 **GitHub MCP detection:**
 1. Check if `gh` CLI is available (run `which gh`)
 2. Check if in a git repo with a remote (`git remote -v`)
-3. If both available AND `config.gate.create_pr_draft: true` AND `--no-pr` was NOT passed:
+3. If both available AND `config.gates.create_pr_draft: true` AND `--no-pr` was NOT passed:
    - Create a PR draft using `gh pr create --draft --title "{spec title}" --body "{gate summary as markdown}"`
    - Report: "PR draft created: {URL}"
 4. If `gh` not available: "Tip: Install GitHub CLI for automatic PR draft creation."

@@ -52,7 +52,7 @@ Where gate status is one of: `pending`, `approved`, `rejected`, or `—` (not re
 Show the loop with the current phase highlighted:
 
 ```
-SPEC → PLAN → BUILD → TEST → AUDIT → [GATE] → SHIP → OBSERVE → [GATE] → TRIAGE → [GATE] → ...
+SPEC → PLAN → IMPLEMENT → TEST → AUDIT → [GATE] → SHIP → OBSERVE → [GATE] → TRIAGE → [GATE] → ...
                                 ▲
                            (you are here)
 ```

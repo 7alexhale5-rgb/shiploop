@@ -15,7 +15,7 @@ Follow the **state-management** skill for all state operations in this command.
 
 Read `.shiploop/state.json`.
 
-- If `.shiploop/` doesn't exist: tell the user to run `/sl-status --init` first. Stop.
+- If `.shiploop/` doesn't exist: tell the user to run `/sl-status --init` or `/sl-loop` to initialize first. Stop.
 - Valid transition: `ship → observe`
 - If current phase is already `observe`: this is a re-check — proceed
 - If current phase is not `ship` or `observe`: tell the user the current phase and suggest the appropriate next command
@@ -54,7 +54,12 @@ Observation window: {window} minutes
 Sentry available: {true|false}
 ```
 
-Transition state to `observe` if not already there.
+**Transition to `observe`:**
+1. Update `phase` to `observe`
+2. Update `last_transition`
+3. Update `updated_at`
+4. Write state atomically
+5. Log the transition to `decisions.jsonl`
 
 ## Step 5: Process Results
 

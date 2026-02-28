@@ -15,7 +15,7 @@ Follow the **state-management** skill for all state operations in this command.
 
 Read `.shiploop/state.json`.
 
-- If `.shiploop/` doesn't exist: tell the user to run `/sl-status --init` first. Stop.
+- If `.shiploop/` doesn't exist: tell the user to run `/sl-status --init` or `/sl-loop` to initialize first. Stop.
 - Valid entry states: `gate_issue_detected`, `triage`, `gate_re_entry`
 - If current phase is `gate_issue_detected`: proceed to **Gate A** (confirm/dismiss)
 - If current phase is `triage`: proceed to **Step 4** (analysis already approved, launch agent)
@@ -89,9 +89,9 @@ If `iteration >= max_iterations`:
 This issue has persisted across {iteration} fix attempts.
 Recommend: manual investigation instead of another automated loop.
 
-Override: set triage.max_iterations higher in .shiploop/config.yaml
+Override: increase triage.max_iterations in config or run /sl-triage --force-reentry to bypass.
 ```
-Ask user: **Continue anyway** or **Stop** (transition to idle).
+Stop — do not continue past the iteration cap.
 
 Launch the **triage-analyst** agent:
 ```
@@ -106,6 +106,8 @@ Iteration: {N}
 ## Step 5: Archive + Promote Spec
 
 After the triage-analyst completes:
+
+Verify `.shiploop/specs/fix-draft.md` exists. If it doesn't, stop: "Triage analyst did not produce a fix spec. Re-run `/sl-triage` from the `triage` phase."
 
 **If `archive_specs: true`:**
 1. Copy `.shiploop/specs/current.md` to `.shiploop/specs/iteration-{N}.md`
@@ -141,6 +143,8 @@ Fix complexity: {level}
 Proposed fix: {1-2 sentence summary from spec}
 Files affected: {N}
 ```
+
+**Even with `--force-reentry`:** verify `.shiploop/specs/fix-draft.md` exists before approving. If it doesn't exist, stop: "No fix spec found — triage analysis may not have completed. Run `/sl-triage` without `--force-reentry` first."
 
 **If `--force-reentry` was passed:** skip to approve path below.
 

@@ -15,7 +15,7 @@ Follow the **state-management** skill for all state operations in this command.
 
 Read `.shiploop/state.json`.
 
-- If `.shiploop/` doesn't exist: tell the user to run `/sl-status --init` first. Stop.
+- If `.shiploop/` doesn't exist: tell the user to run `/sl-status --init` or `/sl-loop` to initialize first. Stop.
 - Valid transition: `implement → test`
 - If current phase is not `implement`: tell the user the current phase and suggest the appropriate next command
 - If current phase is already `test`: this is a re-run — proceed (regenerate tests and re-execute)

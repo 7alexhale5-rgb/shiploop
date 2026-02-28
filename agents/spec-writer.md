@@ -1,7 +1,7 @@
 ---
 name: spec-writer
 description: Drafts implementation specs from requirements, issues, or production observations by analyzing the codebase and producing structured, testable specifications
-tools: Read, Grep, Glob, WebSearch, TodoWrite
+tools: Read, Grep, Glob, TodoWrite
 model: sonnet
 color: blue
 ---

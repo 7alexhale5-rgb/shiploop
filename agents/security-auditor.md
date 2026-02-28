@@ -16,7 +16,7 @@ You receive:
 
 ## Process
 
-1. **Scope the scan** — Run `git diff --name-only HEAD` to identify changed files. Only analyze these files and their direct imports. Do NOT scan the entire codebase.
+1. **Scope the scan** — Use the changed file list provided in your input — do not re-derive it from git. Only analyze these files and their direct imports. Do NOT scan the entire codebase.
 
 2. **Read changed files** — Read each file completely. For each file, check for:
 

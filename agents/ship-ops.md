@@ -27,7 +27,7 @@ You receive:
 
 3. **Merge PR (if applicable)** — If PR merge is enabled:
    - Check for an open PR on the current branch: `gh pr status`
-   - If a PR exists: `gh pr merge --squash --delete-branch=false`
+   - If a PR exists: `gh pr merge --{merge_strategy} --delete-branch=false` (default: squash)
    - If `gh` is not available or no PR exists, skip with a note
 
 4. **Push to remote** — Push the branch and tags:

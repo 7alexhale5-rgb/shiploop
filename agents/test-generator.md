@@ -16,7 +16,7 @@ You receive:
 
 ## Process
 
-1. **Read the diff** — Run `git diff --name-only HEAD` to identify changed files. Filter to source files (skip configs, docs, generated files).
+1. **Read the diff** — Use the changed file list provided in your input — do not re-derive it from git. Filter to source files (skip configs, docs, generated files).
 
 2. **Read the spec** — Read `.shiploop/specs/current.md` to understand what the changes are supposed to accomplish. Tests should verify the spec's intent, not just exercise code paths.
 

@@ -54,8 +54,8 @@ The filesystem is the state machine. ShipLoop creates a `.shiploop/` directory i
 Agents use the right model for the job:
 
 - **Opus** — security audits (high-stakes, deep reasoning)
-- **Sonnet** — spec writing, planning, building, testing, triage
-- **Haiku** — boilerplate generation, gate formatting, ship commands
+- **Sonnet** — spec writing, planning, building, testing, triage, gate presentation
+- **Haiku** — boilerplate generation, ship commands
 
 ## MCP Integration
 
